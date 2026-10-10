@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Run one ACE-Step cover (remix) job for a work/ project, with ETA + elapsed feedback.
+"""Run one ACE-Step generation job for a work/ project, with ETA + elapsed feedback.
 
-Talks to the local API directly (stdlib only) so every melody-related knob is reachable:
+Talks to the local API directly (stdlib only). Two tasks:
 
-  python3 work/bin/remix.py <project> <label> "<caption>" \
-      [--strength 0.9] [--noise 0.4] [--batch 2] [--seed N] [--thinking] [--source REL]
+  # text-to-music, optionally with a reference for timbre/mix/atmosphere only
+  python3 work/bin/generate.py <project> <label> "<caption>" --task text2music \
+      --duration 130 [--ref REL] [--batch 4] [--seed N]
 
-  --strength  audio_cover_strength: fraction of denoising steps that see the source
-              structure (1.0 = all). Keep high (0.8-1.0) to preserve the tune.
-  --noise     cover_noise_strength ("melody retention"): 0 = start from pure noise,
-              1 = start at the source audio. 0.3-0.6 keeps melody while changing timbre.
+  # cover/remix of a source (keeps the source's notes and structure)
+  python3 work/bin/generate.py <project> <label> "<caption>" --task cover \
+      [--source REL] [--strength 0.9] [--noise 0.4] [--batch 2] [--seed N]
+
+  --ref       reference_audio: time-averaged global timbre/mix/atmosphere hint. Does not
+              carry melody or rhythm (docs/en/Tutorial.md "Reference Audio").
+  --strength  (cover) audio_cover_strength: fraction of denoising steps that see the source.
+  --noise     (cover) cover_noise_strength ("melody retention"): 0 = pure noise start.
   --thinking  let the 5Hz LM rewrite caption/metadata (off by default: it drifts).
 
+Paths are repo-relative (the API rejects absolute paths).
 Outputs: work/projects/<project>/renders/<label>_<n>.wav, params in logs/<label>.json,
-timing appended to work/logs/timings.csv (feeds the next estimate).
+timing appended to work/logs/timings.csv (feeds the next estimate, per task).
 """
 
 from __future__ import annotations
@@ -52,14 +58,14 @@ def audio_duration(path: Path) -> float:
     return float(out.stdout.strip())
 
 
-def estimate_seconds(workload: float) -> tuple[float, int] | None:
-    """Average seconds per generated audio-second over past cover runs, scaled to workload."""
+def estimate_seconds(task: str, workload: float) -> tuple[float, int] | None:
+    """Average seconds per generated audio-second over past runs of a task, scaled to workload."""
     if not TIMINGS.exists():
         return None
     rates = [
         float(r["elapsed_s"]) / (float(r["duration_s"]) * float(r["batch"]))
         for r in csv.DictReader(TIMINGS.open())
-        if r["task"] == "cover" and float(r["duration_s"]) * float(r["batch"]) > 0
+        if r["task"] == task and float(r["duration_s"]) * float(r["batch"]) > 0
     ]
     return (sum(rates) / len(rates) * workload, len(rates)) if rates else None
 
@@ -73,6 +79,9 @@ def main() -> int:
     """Parse args, submit the job, poll with feedback, file outputs and record timing."""
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("project"); p.add_argument("label"); p.add_argument("caption")
+    p.add_argument("--task", choices=["cover", "text2music"], default="cover")
+    p.add_argument("--duration", type=int, help="seconds (text2music; cover uses source length)")
+    p.add_argument("--ref", help="repo-relative reference audio (timbre/atmosphere hint)")
     p.add_argument("--strength", type=float, default=0.9)
     p.add_argument("--noise", type=float, default=0.4)
     p.add_argument("--batch", type=int, default=2)
@@ -82,9 +91,15 @@ def main() -> int:
     a = p.parse_args()
 
     pdir = WORK / "projects" / a.project
-    src_rel = a.source or f"work/projects/{a.project}/source/trimmed.wav"
-    if not (REPO / src_rel).exists():
-        sys.exit(f"Source not found: {src_rel}")
+    src_rel = None
+    if a.task == "cover":
+        src_rel = a.source or f"work/projects/{a.project}/source/trimmed.wav"
+        if not (REPO / src_rel).exists():
+            sys.exit(f"Source not found: {src_rel}")
+    elif not a.duration:
+        sys.exit("--duration is required for text2music")
+    if a.ref and not (REPO / a.ref).exists():
+        sys.exit(f"Reference not found: {a.ref}")
     try:
         if not api("/health")["data"]["models_initialized"]:
             sys.exit("Server up but models not loaded. Run: work/bin/server.sh start")
@@ -93,22 +108,22 @@ def main() -> int:
     (pdir / "renders").mkdir(parents=True, exist_ok=True)
     (pdir / "logs").mkdir(parents=True, exist_ok=True)
 
-    dur = round(audio_duration(REPO / src_rel))
-    est = estimate_seconds(dur * a.batch)
+    dur = round(audio_duration(REPO / src_rel)) if src_rel else a.duration
+    est = estimate_seconds(a.task, dur * a.batch)
+    basis = f"{a.task} runs"
+    if not est:
+        est, basis = estimate_seconds("cover", dur * a.batch), "cover runs; no history for this task"
     if est:
-        print(f"Estimate: ~{fmt(est[0])} for {dur}s x {a.batch} takes (avg of {est[1]} past runs)")
+        print(f"Estimate: ~{fmt(est[0])} for {dur}s x {a.batch} takes (avg of {est[1]} {basis})")
     else:
         print("Estimate: no timing history yet; this run will calibrate future estimates.")
 
     payload = {
-        "task_type": "cover",
-        "src_audio_path": src_rel,
+        "task_type": a.task,
         "prompt": a.caption,
         "lyrics": "[Instrumental]",
         "audio_duration": dur,
         "batch_size": a.batch,
-        "audio_cover_strength": a.strength,
-        "cover_noise_strength": a.noise,
         "thinking": a.thinking,
         "use_cot_caption": a.thinking,
         "use_cot_language": False,
@@ -116,8 +131,14 @@ def main() -> int:
         "seed": a.seed,
         "audio_format": "wav",
     }
+    if a.task == "cover":
+        payload.update(src_audio_path=src_rel, audio_cover_strength=a.strength,
+                       cover_noise_strength=a.noise)
+    if a.ref:
+        payload["reference_audio_path"] = a.ref
     (pdir / "logs" / f"{a.label}.json").write_text(json.dumps(payload, indent=2))
-    print(f"Submitting {a.label}: strength={a.strength} noise={a.noise} batch={a.batch} "
+    knobs = f"strength={a.strength} noise={a.noise} " if a.task == "cover" else ""
+    print(f"Submitting {a.label} ({a.task}, {dur}s): {knobs}ref={a.ref or '-'} batch={a.batch} "
           f"thinking={a.thinking}")
 
     start = time.time()
@@ -153,7 +174,7 @@ def main() -> int:
 
     with TIMINGS.open("a", newline="") as f:
         csv.writer(f).writerow([datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                                a.project, a.label, "cover", dur, a.batch, round(elapsed)])
+                                a.project, a.label, a.task, dur, a.batch, round(elapsed)])
     print(f"Done in {fmt(elapsed)}: {', '.join(files)} -> {pdir.relative_to(REPO)}/renders/")
     return 0
 

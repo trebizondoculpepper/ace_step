@@ -11,8 +11,11 @@ Only scripts, docs, notes and `timings.csv` are committed; audio and run logs ar
 work/
   AGENTS.md                 this file
   bin/server.sh             start|status|stop the local ACE-Step API server
-  bin/remix.py              run one cover/remix job (direct API client) with ETA + elapsed
+  bin/generate.py           one generation job (text2music or cover) with ETA + elapsed
   bin/melody_check.py       score how closely renders follow the source melody
+  bin/describe_audio.py     section timeline (loudness, brightness, bass, onsets) + tempo/key
+  bin/drone_score.py        screen renders: drone-like? and originality vs references
+  bin/loop.py               seamless loop + extend to N minutes + loudness to target LUFS
   logs/server.log           API server log
   logs/timings.csv          every timed run; feeds ETA estimates
   projects/<project>/       one folder per piece of work (kebab-case name)
@@ -25,8 +28,10 @@ work/
 
 ## Tools
 
-Installed with Homebrew: `ffmpeg`, `yt-dlp`, `deno` (yt-dlp's YouTube JS runtime).
-Install anything else needed with `brew install`, not pip/system packages.
+Installed with Homebrew: `ffmpeg`, `yt-dlp`, `deno` (yt-dlp's YouTube JS runtime), `jq`.
+Python tools run with the repo venv (`.venv/bin/python`, has numpy); `generate.py` is stdlib-only
+and runs on system `python3` (3.9). Install anything else with `brew install`.
+- `music.youtube.com` URLs can 403 in yt-dlp; use the `www.youtube.com/watch?v=` form.
 
 ## Process
 
@@ -37,7 +42,7 @@ Install anything else needed with `brew install`, not pip/system packages.
    `ffmpeg -i original.wav -af silencedetect=n=-45dB:d=1 -f null -`, then trim/convert:
    `ffmpeg -ss <start> -t <len> -i original.wav -ar 48000 -ac 2 trimmed.wav`
 4. **Server**: `work/bin/server.sh start` — loads models up front and reports load time.
-5. **Generate**: `python3 work/bin/remix.py <name> <label> "<caption>" --strength S --noise N --batch B [--seed 42]`
+5. **Generate**: `python3 work/bin/generate.py <name> <label> "<caption>" --task cover --strength S --noise N --batch B [--seed 42]`
    - Labels encode the settings, e.g. `reggae-s090-n040` (strength 0.90, noise 0.40).
    - To compare settings, use batch 1 and a fixed `--seed` so only the knob changes.
    - Then batch 2+ with random seeds on the winning setting.
@@ -53,6 +58,10 @@ Learned on bbc-news-24-remix: strength 0.45 / noise 0 / thinking on lost the tun
   the original instruments too.
   Before our fix (2026-10-10) the MLX DiT backend silently ignored this setting; if renders
   with different `--noise` come out identical, check `Cover mode` appears in `logs/server.log`.
+- `--noise` is **quantised** to the turbo model's 8-step schedule (shift 3:
+  1.0, .955, .9, .833, .75, .643, .5, .3). It snaps 1−noise to the nearest step, so the only
+  distinct levels are ≈0.25 (4 steps left), ≈0.36 (3), 0.45–0.6 (2, identical output), ≥0.65
+  (1 step: very close to the source). Don't sweep values that land on the same step.
 - Leave `--thinking` off: the LM rewrites the caption and metadata and drifts.
 - Name the lead instruments that should carry the melody in the caption.
 - Not yet tried: flow-edit morph (`flow_edit_morph`, Gradio UI / Python only, not exposed
@@ -67,7 +76,7 @@ Learned on bbc-news-24-remix: strength 0.45 / noise 0 / thinking on lost the tun
 Always tell the user how long something will take **before** starting it, and report actual
 time when it finishes.
 
-- `remix.py` prints an estimate from `logs/timings.csv` (avg seconds per generated
+- `generate.py` prints an estimate from `logs/timings.csv` (avg seconds per generated
   audio-second × duration × batch) and an elapsed tick every 30 s.
 - `server.sh start` prints load progress; model load is ~30 s with the 1.7B LM (2026-10-10).
 - Run anything over ~1 min in the background and check in with the user, rather than
@@ -90,5 +99,21 @@ time when it finishes.
 - `start_api_server_macos.sh` retries in offline mode when killed. Use `server.sh stop`,
   not `pkill` on the wrapper.
 - The skill script `acestep.sh` can't set `cover_noise_strength` and forces `thinking`; use
-  `remix.py` instead. System `python3` is 3.9 (keep `from __future__ import annotations`).
+  `generate.py` instead. System `python3` is 3.9 (keep `from __future__ import annotations`).
+- The shell is zsh: unquoted `$VAR` does NOT word-split. Never store a command or arg list in
+  a variable (`G="python3 x.py"; $G ...` fails with exit 127); write commands out in full.
 - Source material is often copyrighted (e.g. the BBC News theme): keep remixes private.
+
+## Drone beds for YouTube (project: drones)
+
+Goal: original background drones inspired by references the user likes.
+1. **Reference**: download, find the drone section with `describe_audio.py`, cut it to
+   `source/<name>_<section>.wav` (48 kHz). Run ACE-Step `full_analysis_only` for a caption,
+   but verify it against the measurements (it called a Gong drone "epic orchestral").
+2. **Style card** in `NOTES.md`: timbre, register, movement, tonal centre, space.
+3. **Generate**: `generate.py --task text2music --duration 140 --ref <reference clip>`. The
+   reference is a light, time-averaged timbre hint (no melody/rhythm). Never use `--task cover`
+   on references for publishable work: it reproduces their notes (Content ID risk).
+4. **Screen**: `drone_score.py --ref <refs...> <renders...>` — want DRONE and no COPY? flag.
+5. **Loop/extend**: `loop.py <render> [--minutes M] [--lufs -18]` → `_loop.wav`, `_<M>min.wav`.
+ACE-Step is MIT; its README asks users to verify originality and disclose AI involvement.
