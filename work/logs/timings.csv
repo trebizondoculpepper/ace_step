@@ -8,3 +8,4 @@ timestamp,project,label,task,duration_s,batch,elapsed_s
 2026-10-10T11:00:33Z,bbc-news-24-remix,house-s100-n030,cover,84,1,57
 2026-10-10T11:01:22Z,bbc-news-24-remix,house-s100-n050,cover,84,1,48
 2026-10-10T11:02:10Z,bbc-news-24-remix,house-s100-n070,cover,84,1,48
+2026-10-10T11:03:11Z,-,server-start,load,0,0,25
