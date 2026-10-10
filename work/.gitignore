@@ -1,0 +1,11 @@
+# Audio is large and reproducible (re-fetch sources with yt-dlp); keep it out of git.
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg
+# Runtime logs / state
+logs/*.log
+logs/*.pid
+projects/*/logs/
+projects/*/renders/*.json
