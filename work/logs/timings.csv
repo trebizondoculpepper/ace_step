@@ -1,2 +1,10 @@
 timestamp,project,label,task,duration_s,batch,elapsed_s
 2026-10-10T10:47:24Z,-,server-start,load,0,0,30
+2026-10-10T10:49:40Z,bbc-news-24-remix,reggae-s045,cover,84,2,132
+2026-10-10T10:54:24Z,bbc-news-24-remix,reggae-s100-n00,cover,84,1,66
+2026-10-10T10:55:31Z,bbc-news-24-remix,reggae-s090-n040,cover,84,1,66
+2026-10-10T10:56:37Z,bbc-news-24-remix,reggae-s090-n060,cover,84,1,66
+2026-10-10T10:59:30Z,-,server-start,load,0,0,26
+2026-10-10T11:00:33Z,bbc-news-24-remix,house-s100-n030,cover,84,1,57
+2026-10-10T11:01:22Z,bbc-news-24-remix,house-s100-n050,cover,84,1,48
+2026-10-10T11:02:10Z,bbc-news-24-remix,house-s100-n070,cover,84,1,48

@@ -11,15 +11,16 @@ Only scripts, docs, notes and `timings.csv` are committed; audio and run logs ar
 work/
   AGENTS.md                 this file
   bin/server.sh             start|status|stop the local ACE-Step API server
-  bin/remix.sh              run one cover/remix job with ETA + elapsed feedback
+  bin/remix.py              run one cover/remix job (direct API client) with ETA + elapsed
+  bin/melody_check.py       score how closely renders follow the source melody
   logs/server.log           API server log
   logs/timings.csv          every timed run; feeds ETA estimates
   projects/<project>/       one folder per piece of work (kebab-case name)
     NOTES.md                brief, source URL, settings tried, verdicts
     source/original.*       untouched download
     source/trimmed.wav      prepared input (48 kHz stereo WAV)
-    renders/<label>_<n>.wav outputs; <label>.json = generation metadata
-    logs/<label>.log        per-run client log
+    renders/<label>_<n>.wav outputs
+    logs/<label>.json       exact request payload for that label
 ```
 
 ## Tools
@@ -36,19 +37,37 @@ Install anything else needed with `brew install`, not pip/system packages.
    `ffmpeg -i original.wav -af silencedetect=n=-45dB:d=1 -f null -`, then trim/convert:
    `ffmpeg -ss <start> -t <len> -i original.wav -ar 48000 -ac 2 trimmed.wav`
 4. **Server**: `work/bin/server.sh start` — loads models up front and reports load time.
-5. **Generate**: `work/bin/remix.sh <name> <label> <strength> <batch> "<caption>"`
-   - Use labels that describe the setting, e.g. `reggae-s045`, `steelpan-s050`.
-   - Cover strength: 0.3–0.5 big genre change, 0.5–0.7 moderate, 0.7–0.9 subtle.
-   - Batch 2 per idea; pick a winner, then refine strength/caption.
-6. **Record** what was tried and the verdict in the project's `NOTES.md`.
-7. **Stop** the server when done (`work/bin/server.sh stop`) — it holds a lot of memory.
+5. **Generate**: `python3 work/bin/remix.py <name> <label> "<caption>" --strength S --noise N --batch B [--seed 42]`
+   - Labels encode the settings, e.g. `reggae-s090-n040` (strength 0.90, noise 0.40).
+   - To compare settings, use batch 1 and a fixed `--seed` so only the knob changes.
+   - Then batch 2+ with random seeds on the winning setting.
+
+### Keeping the original melody (same tune, new instruments)
+
+Learned on bbc-news-24-remix: strength 0.45 / noise 0 / thinking on lost the tune entirely.
+- `--strength` (`audio_cover_strength`) = fraction of denoising steps conditioned on the
+  source structure. Keep 0.8–1.0 for "same tune"; the 0.3–0.5 genre-change advice in the
+  docs trades away the melody.
+- `--noise` (`cover_noise_strength`, the UI's "Melody Retention") = how much of the source
+  audio the denoiser starts from. 0 = pure noise. 0.3–0.6 keeps melody; too high keeps
+  the original instruments too.
+  Before our fix (2026-10-10) the MLX DiT backend silently ignored this setting; if renders
+  with different `--noise` come out identical, check `Cover mode` appears in `logs/server.log`.
+- Leave `--thinking` off: the LM rewrites the caption and metadata and drifts.
+- Name the lead instruments that should carry the melody in the caption.
+- Not yet tried: flow-edit morph (`flow_edit_morph`, Gradio UI / Python only, not exposed
+  by the HTTP API) — designed for "keep the source, change the style".
+6. **Score** each render: `.venv/bin/python work/bin/melody_check.py <source> <renders...>`
+   (1.0 = identical tune, ~0.43 = tune lost). Report scores with the listening request.
+7. **Record** what was tried and the verdict in the project's `NOTES.md`.
+8. **Stop** the server when done (`work/bin/server.sh stop`) — it holds a lot of memory.
 
 ## Time feedback (required)
 
 Always tell the user how long something will take **before** starting it, and report actual
 time when it finishes.
 
-- `remix.sh` prints an estimate from `logs/timings.csv` (avg seconds per generated
+- `remix.py` prints an estimate from `logs/timings.csv` (avg seconds per generated
   audio-second × duration × batch) and an elapsed tick every 30 s.
 - `server.sh start` prints load progress; model load is ~30 s with the 1.7B LM (2026-10-10).
 - Run anything over ~1 min in the background and check in with the user, rather than
@@ -70,5 +89,6 @@ time when it finishes.
   to the repo root, e.g. `work/projects/<name>/source/trimmed.wav`.
 - `start_api_server_macos.sh` retries in offline mode when killed. Use `server.sh stop`,
   not `pkill` on the wrapper.
-- `.claude/skills/acestep/scripts/acestep.sh` is not executable; call it with `bash`.
+- The skill script `acestep.sh` can't set `cover_noise_strength` and forces `thinking`; use
+  `remix.py` instead. System `python3` is 3.9 (keep `from __future__ import annotations`).
 - Source material is often copyrighted (e.g. the BBC News theme): keep remixes private.
