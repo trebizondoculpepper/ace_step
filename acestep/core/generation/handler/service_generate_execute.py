@@ -262,6 +262,7 @@ class ServiceGenerateExecuteMixin:
                             clean_src_latents=generate_kwargs.get("clean_src_latents"),
                             repaint_crossfade_frames=generate_kwargs.get("repaint_crossfade_frames", 10),
                             repaint_injection_ratio=generate_kwargs.get("repaint_injection_ratio", 0.5),
+                            cover_noise_strength=generate_kwargs.get("cover_noise_strength", 0.0),
                         )
                         _tc = outputs.get("time_costs", {})
                         logger.info(

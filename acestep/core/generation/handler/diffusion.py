@@ -49,6 +49,7 @@ class DiffusionMixin:
         clean_src_latents: Optional[torch.Tensor] = None,
         repaint_crossfade_frames: int = 10,
         repaint_injection_ratio: float = 0.5,
+        cover_noise_strength: float = 0.0,
     ) -> Dict[str, Any]:
         """Run the MLX diffusion loop and return generated latents.
 
@@ -83,6 +84,8 @@ class DiffusionMixin:
             dcw_wavelet: Wavelet basis. MLX path currently only implements
                 ``"haar"`` natively; other values warn once and fall back
                 to Haar.
+            cover_noise_strength: Start from re-noised ``src_latents`` instead of
+                pure noise (0 = pure noise, 1 = closest to source).
 
         Returns:
             Dict[str, Any]: ``{"target_latents": torch.Tensor, "time_costs": dict}``.
@@ -185,6 +188,10 @@ class DiffusionMixin:
             clean_src_latents_np=clean_src_np,
             repaint_crossfade_frames=repaint_crossfade_frames,
             repaint_injection_ratio=repaint_injection_ratio,
+            cover_noise_strength=cover_noise_strength,
+            src_latents_np=(
+                src_latents.detach().cpu().float().numpy() if cover_noise_strength > 0.0 else None
+            ),
         )
 
         target_np = result["target_latents"]

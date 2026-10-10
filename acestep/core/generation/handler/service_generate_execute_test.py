@@ -144,6 +144,46 @@ class ServiceGenerateExecuteMixinTests(unittest.TestCase):
         self.assertFalse(host._mlx_run_diffusion.call_args.kwargs["dcw_enabled"])
         self.assertFalse(host.model.generate_audio.call_args.kwargs["dcw_enabled"])
 
+    def test_mlx_path_forwards_cover_noise_strength(self):
+        """Regression: MLX DiT must receive cover_noise_strength (was silently dropped)."""
+        host = _Host()
+        host.config = types.SimpleNamespace(is_turbo=True)
+        host.use_mlx_dit = True
+        host.mlx_decoder = object()
+        host.model = MagicMock()
+        condition = torch.zeros(1, 4, 4)
+        host.model.prepare_condition.return_value = (condition, condition, condition)
+        host._load_model_context = lambda _name: nullcontext()
+        host._mlx_run_diffusion = MagicMock(
+            return_value={"target_latents": condition, "time_costs": {}}
+        )
+        payload = {
+            "text_hidden_states": condition,
+            "text_attention_mask": condition,
+            "lyric_hidden_states": condition,
+            "lyric_attention_mask": condition,
+            "refer_audio_acoustic_hidden_states_packed": condition,
+            "refer_audio_order_mask": torch.zeros(1, dtype=torch.long),
+            "src_latents": condition,
+            "chunk_mask": torch.ones(1, 4, dtype=torch.bool),
+            "is_covers": torch.tensor([True]),
+            "precomputed_lm_hints_25Hz": None,
+            "non_cover_text_hidden_states": None,
+            "non_cover_text_attention_masks": None,
+        }
+
+        host._execute_service_generate_diffusion(
+            payload=payload,
+            generate_kwargs={"cover_noise_strength": 0.5},
+            seed_param=1234,
+            infer_method="ode",
+            shift=1.0,
+            audio_cover_strength=1.0,
+        )
+
+        host.model.generate_audio.assert_not_called()
+        self.assertEqual(host._mlx_run_diffusion.call_args.kwargs["cover_noise_strength"], 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()

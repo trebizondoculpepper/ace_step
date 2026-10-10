@@ -71,6 +71,50 @@ class DiffusionMixinTests(unittest.TestCase):
         self.assertEqual(result["target_latents"].device.type, "cpu")
         self.assertTrue(torch.allclose(result["target_latents"], torch.ones_like(result["target_latents"])))
 
+    def test_mlx_run_diffusion_forwards_cover_noise_strength_and_src_latents(self):
+        """Regression: cover_noise_strength must reach the MLX loop with source latents."""
+        host = _Host()
+        src_latents = torch.full((1, 2, 3), 0.25, dtype=torch.float32)
+        seen = {}
+
+        def _fake_generate(**kwargs):
+            seen.update(kwargs)
+            return {"target_latents": np.zeros((1, 2, 3), dtype=np.float32), "time_costs": {}}
+
+        with patch("acestep.core.generation.handler.diffusion.mlx_generate_diffusion", side_effect=_fake_generate):
+            host._mlx_run_diffusion(
+                encoder_hidden_states=torch.randn(1, 2, 3),
+                encoder_attention_mask=torch.ones(1, 2),
+                context_latents=torch.randn(1, 4, 3),
+                src_latents=src_latents,
+                seed=1,
+                cover_noise_strength=0.4,
+            )
+
+        self.assertEqual(seen["cover_noise_strength"], 0.4)
+        np.testing.assert_allclose(seen["src_latents_np"], np.full((1, 2, 3), 0.25))
+
+    def test_mlx_run_diffusion_skips_src_latents_when_cover_noise_disabled(self):
+        """Default path (strength 0) does not copy source latents to numpy."""
+        host = _Host()
+        seen = {}
+
+        def _fake_generate(**kwargs):
+            seen.update(kwargs)
+            return {"target_latents": np.zeros((1, 2, 3), dtype=np.float32), "time_costs": {}}
+
+        with patch("acestep.core.generation.handler.diffusion.mlx_generate_diffusion", side_effect=_fake_generate):
+            host._mlx_run_diffusion(
+                encoder_hidden_states=torch.randn(1, 2, 3),
+                encoder_attention_mask=torch.ones(1, 2),
+                context_latents=torch.randn(1, 4, 3),
+                src_latents=torch.zeros(1, 2, 3),
+                seed=1,
+            )
+
+        self.assertEqual(seen["cover_noise_strength"], 0.0)
+        self.assertIsNone(seen["src_latents_np"])
+
     def test_mlx_run_diffusion_handles_optional_and_iterable_timesteps(self):
         host = _Host(dtype=torch.float32)
         encoder_hidden_states = torch.randn(1, 2, 3, dtype=torch.float32)

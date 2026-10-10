@@ -25,6 +25,8 @@ import numpy as np
 from loguru import logger
 from tqdm import tqdm
 
+from .cover_noise_init import apply_cover_noise_init
+
 VALID_SAMPLER_MODES = {"euler", "heun"}
 
 # Pre-defined timestep schedules (from modeling_acestep_v15_turbo.py)
@@ -198,6 +200,8 @@ def mlx_generate_diffusion(
     clean_src_latents_np: Optional[np.ndarray] = None,
     repaint_crossfade_frames: int = 10,
     repaint_injection_ratio: float = 0.5,
+    cover_noise_strength: float = 0.0,
+    src_latents_np: Optional[np.ndarray] = None,
 ) -> Dict[str, object]:
     """Run the complete MLX diffusion loop with optional CFG guidance.
 
@@ -232,6 +236,9 @@ def mlx_generate_diffusion(
         velocity_ema_factor: Blend current velocity prediction with the previous
             step's prediction via EMA (``vt = (1-f)*vt + f*prev``).
             0 disables (default).  Values around 0.05–0.2 smooth the trajectory.
+        cover_noise_strength: start from re-noised ``src_latents_np`` instead of
+            pure noise (0 = pure noise, 1 = closest to source); matches PyTorch.
+        src_latents_np: [B, T, C] source latents used by ``cover_noise_strength``.
 
     Returns:
         Dict with ``"target_latents"`` (numpy) and ``"time_costs"`` dict.
@@ -317,6 +324,15 @@ def mlx_generate_diffusion(
 
     # ---- Timestep schedule ----
     t_schedule_list = get_timestep_schedule(shift, timesteps, infer_steps=infer_steps)
+    src_mx = mx.array(src_latents_np) if src_latents_np is not None else None
+    xt_init, t_schedule_list = apply_cover_noise_init(
+        t_schedule_list, noise, src_mx, cover_noise_strength
+    )
+    if xt_init is not noise:
+        logger.info(
+            "[MLX-DiT] Cover mode: cover_noise_strength={}, start_t={:.4f}, remaining_steps={}",
+            cover_noise_strength, t_schedule_list[0], len(t_schedule_list),
+        )
     num_steps = len(t_schedule_list)
 
     cover_steps = int(num_steps * audio_cover_strength)
@@ -347,7 +363,7 @@ def mlx_generate_diffusion(
     else:
         cache = MLXCrossAttentionCache() if _compiled_step is None else None
 
-    xt = noise
+    xt = xt_init
     prev_vt = None  # for EMA smoothing
 
     def _model_eval(x_input, t_val, enc, ctx_in, step_cache):
