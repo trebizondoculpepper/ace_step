@@ -15,6 +15,7 @@ Talks to the local API directly (stdlib only). Two tasks:
               carry melody or rhythm (docs/en/Tutorial.md "Reference Audio").
   --strength  (cover) audio_cover_strength: fraction of denoising steps that see the source.
   --noise     (cover) cover_noise_strength ("melody retention"): 0 = pure noise start.
+  --lyrics-file  sung lyrics (with structure tags); default [Instrumental]
   --thinking  let the 5Hz LM rewrite caption/metadata (off by default: it drifts).
 
 Paths are repo-relative (the API rejects absolute paths).
@@ -89,6 +90,9 @@ def main() -> int:
     p.add_argument("--thinking", action="store_true")
     p.add_argument("--bpm", type=int, help="tempo metadata (text2music)")
     p.add_argument("--key", help='key metadata, e.g. "C major"')
+    p.add_argument("--lyrics-file", help="lyrics text file with [Verse]/[Chorus] tags "
+                   "(default: [Instrumental])")
+    p.add_argument("--language", default="en", help="vocal language code (en, sr, unknown, ...)")
     p.add_argument("--source", help="repo-relative source path (default: <project>/source/trimmed.wav)")
     a = p.parse_args()
 
@@ -123,7 +127,8 @@ def main() -> int:
     payload = {
         "task_type": a.task,
         "prompt": a.caption,
-        "lyrics": "[Instrumental]",
+        "lyrics": Path(a.lyrics_file).read_text() if a.lyrics_file else "[Instrumental]",
+        "vocal_language": a.language,
         "audio_duration": dur,
         "batch_size": a.batch,
         "thinking": a.thinking,

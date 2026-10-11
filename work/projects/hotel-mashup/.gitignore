@@ -1,0 +1,3 @@
+# Private lyric sheets and the handoff's lyric excerpts must not be pushed.
+source/*.txt
+prompts/HANDOFF.md
