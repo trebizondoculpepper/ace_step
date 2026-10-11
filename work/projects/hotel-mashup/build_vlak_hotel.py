@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 
 from audio_master import normalize_master
+from number_renders import number_renders
 
 HERE = Path(__file__).resolve().parent
 STEMS = HERE / "logs" / "demucs" / "htdemucs_6s"
@@ -111,6 +112,8 @@ def main() -> None:
     sections = [build_section(index, band, options.original_choruses)
                 for index in range(len(SECTIONS))]
     output = mix_and_master(sections, options.original_choruses)
+    renamed = number_renders(output.parent)
+    output = output.with_name(renamed.get(output.name, output.name))
     print(f"Wrote {output.name} and .mp3; {sum(s[1] for s in SECTIONS):.2f}s audio; "
           f"{time.monotonic() - started:.1f}s processing", flush=True)
 

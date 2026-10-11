@@ -13,6 +13,8 @@ import librosa
 import numpy as np
 import soundfile as sf
 
+from number_renders import number_renders
+
 HERE = Path(__file__).resolve().parent
 SR = 16000
 HOP = 256
@@ -71,6 +73,8 @@ def main() -> None:
     vlak = HERE / "logs" / "cross-hotel-words-vocal.wav"
     retune(vlak, hc, HERE / "renders" / "retuned-vlak-words-hotel-tune.wav")
     retune(hc, vlak, HERE / "renders" / "retuned-hotel-words-vlak-tune.wav")
+    for name in number_renders(HERE / "renders").values():
+        print(name, flush=True)
 
 
 if __name__ == "__main__":

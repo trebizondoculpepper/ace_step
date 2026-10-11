@@ -12,6 +12,7 @@ from pathlib import Path
 
 from audio_master import normalize_master
 from harmony_pitch import correct_file
+from number_renders import number_renders
 
 HERE = Path(__file__).resolve().parent
 STEMS = HERE / "logs" / "demucs" / "htdemucs_6s"
@@ -86,7 +87,9 @@ def master(sections: list[tuple[Path, Path, Path]], corrected: bool) -> None:
     normalize_master(output)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(output), "-c:a", "libmp3lame",
                     "-b:a", "320k", str(output.with_suffix(".mp3"))], check=True)
-    print(f"Wrote {label}.wav and .mp3 ({duration:.2f}s)", flush=True)
+    renamed = number_renders(output.parent)
+    output = output.with_name(renamed.get(output.name, output.name))
+    print(f"Wrote {output.name} and .mp3 ({duration:.2f}s)", flush=True)
 
 
 def main() -> None:

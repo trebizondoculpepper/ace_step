@@ -11,6 +11,7 @@ import subprocess
 from pathlib import Path
 
 from build_crossed_choruses import HERE, STRETCH, cut_audio
+from number_renders import find_render, number_renders
 from retune_crossed_vocals import retune
 
 STEMS = HERE / "logs" / "demucs" / "htdemucs_6s"
@@ -46,8 +47,8 @@ def prepare_outro() -> Path:
 
 def mix_arrangement(verse1: Path, verse2: Path, outro: Path) -> None:
     """Mix crossed verses and choruses, overlapping both parts in chorus three."""
-    serbian = HERE / "renders" / "retuned-vlak-words-hotel-tune.wav"
-    english = HERE / "renders" / "retuned-hotel-words-vlak-tune.wav"
+    serbian = find_render("retuned-vlak-words-hotel-tune.wav")
+    english = find_render("retuned-hotel-words-vlak-tune.wav")
     tracks = [(verse1, 13.05, 0), (serbian, 42.115, 0), (verse2, 68.215, 0),
               (english, 98.080, 0), (serbian, 123.895, -0.35),
               (english, 123.895, 0.35), (outro, 149.975, 0)]
@@ -68,7 +69,9 @@ def mix_arrangement(verse1: Path, verse2: Path, outro: Path) -> None:
                    check=True)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(output), "-c:a", "libmp3lame",
                     "-b:a", "320k", str(output.with_suffix(".mp3"))], check=True)
-    print("Wrote crossed-overlap_master.wav and .mp3", flush=True)
+    renamed = number_renders(output.parent)
+    output = output.with_name(renamed.get(output.name, output.name))
+    print(f"Wrote {output.name} and .mp3", flush=True)
 
 
 def main() -> None:
