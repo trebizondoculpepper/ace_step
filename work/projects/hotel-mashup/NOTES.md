@@ -134,3 +134,22 @@ Local chorus transcription recognized the English chorus. All twelve section fil
 expected matched durations; final MP3 codec/duration and master loudness were checked.
 Human listening remains the check for vocal phrasing and balance. Audio stays private/local.
 Final inverse WAV measurement: -14.01 LUFS / -1.48 dBTP. MP3: stereo 48 kHz, 7.28 MB.
+
+## Hotel California verses + original Vlak choruses (2026-10-11)
+
+User verdict on inverse: verses work really well, choruses do not. Requested original Vlak
+choruses with only verse vocals replaced by HC. Added `--original-choruses` to the inverse
+builder; the default inverse output and behavior remain available.
+
+Run: `python3 work/projects/hotel-mashup/build_vlak_hotel.py --original-choruses`.
+The arrangement stays 181.83 s (3:02). Slots at 1:06–1:35 and 2:04–2:33 now use Vlak's real
+chorus vocals, cut at exactly the same source positions as their backing, without tempo/pitch
+changes. Both band and vocals use gain 1.4 in these slots to preserve the original chorus
+balance; HC verse compression is not applied to the Vlak choruses. Intro/outro stay instrumental.
+
+Output: `renders/vlak-hotel-verses-original-choruses.mp3`, 320 kbps stereo, 7.28 MB, with matching
+48 kHz/24-bit WAV. Processing took 10.4 s. Final WAV measured -13.96 LUFS / -1.47 dBTP.
+Verified both verse band/vocal intermediate files are byte-for-byte identical to the previous
+inverse; mastering gain can change with the revised choruses. Local first-chorus transcription
+recognized Vlak's words and no HC chorus words. MP3 codec and duration validated; Python 3.9
+syntax and diff whitespace checks pass. No server, downloads or external audio uploads.
