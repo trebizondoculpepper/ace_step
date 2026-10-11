@@ -102,3 +102,35 @@ All audio, lyric sheets, transcripts and the handoff containing lyric excerpts r
 
 Final mastering verification: -14.23 LUFS / -1.51 dBTP (WAV). Measured normalization and
 oversampled peak limiting added about 43 s. Nine focused unit tests passed in total.
+
+## Inverse: Vlak band + Hotel California vocals (2026-10-11)
+
+User liked `hotel-band-vlak-vocals_unshifted.mp3` and requested the inverse. Matched that
+approach: only Vlak's instrumental stems, only HC's real vocals, **no pitch shifting**.
+Vocals retain HC's sung melody over Vlak's backing; this is not a note-for-note re-singing of
+HC words to Vlak's vocal melody. Verse/chorus phrases are stretched to fit the backing slots.
+
+`python3 work/projects/hotel-mashup/build_vlak_hotel.py` builds the 181.83 s (3:02) arrangement.
+HC's first-verse pickup is included at source 50.0 s. First chorus stops before the second
+verse pickup and leaves a short instrumental tail. The second verse uses its first half.
+
+| output time | Vlak backing source | HC vocal source |
+|---|---|---|
+| 0:00–0:07 | 145.98–153.15 | instrumental |
+| 0:07–1:06 | 0.00–59.07 | 50.00–103.66, verse one |
+| 1:06–1:35 | 59.07–87.75 | 103.66–128.48, first chorus |
+| 1:35–2:04 | 87.75–117.31 | 128.48–155.74, first half of verse two |
+| 2:04–2:33 | 117.31–145.98 | 182.83–208.91, second chorus |
+| 2:33–3:02 | 59.07–87.75 | instrumental outro |
+
+Backing gain 1.4; HC vocal compression threshold .08, ratio 2.5, makeup 1.2. The initial
+balance measurement covered only Vlak's sparse opening and overestimated the needed backing
+gain; caught and corrected before delivery. Mastered with existing measured two-pass
+normalization and oversampled peak limiting. Successful remix/master/MP3 pass took 9.40 s;
+initial stem assembly and local verification added several seconds. No server or downloads.
+
+Outputs: `renders/vlak-band-hotel-vocals_unshifted.mp3` (320 kbps) and matching 48 kHz/24-bit WAV.
+Local chorus transcription recognized the English chorus. All twelve section files have the
+expected matched durations; final MP3 codec/duration and master loudness were checked.
+Human listening remains the check for vocal phrasing and balance. Audio stays private/local.
+Final inverse WAV measurement: -14.01 LUFS / -1.48 dBTP. MP3: stereo 48 kHz, 7.28 MB.
