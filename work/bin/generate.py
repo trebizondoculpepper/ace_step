@@ -5,7 +5,7 @@ Talks to the local API directly (stdlib only). Two tasks:
 
   # text-to-music, optionally with a reference for timbre/mix/atmosphere only
   python3 work/bin/generate.py <project> <label> "<caption>" --task text2music \
-      --duration 130 [--ref REL] [--batch 4] [--seed N]
+      --duration 130 [--ref REL] [--batch 4] [--seed N] [--bpm 140] [--key "C major"]
 
   # cover/remix of a source (keeps the source's notes and structure)
   python3 work/bin/generate.py <project> <label> "<caption>" --task cover \
@@ -87,6 +87,8 @@ def main() -> int:
     p.add_argument("--batch", type=int, default=2)
     p.add_argument("--seed", type=int, default=-1)
     p.add_argument("--thinking", action="store_true")
+    p.add_argument("--bpm", type=int, help="tempo metadata (text2music)")
+    p.add_argument("--key", help='key metadata, e.g. "C major"')
     p.add_argument("--source", help="repo-relative source path (default: <project>/source/trimmed.wav)")
     a = p.parse_args()
 
@@ -136,6 +138,10 @@ def main() -> int:
                        cover_noise_strength=a.noise)
     if a.ref:
         payload["reference_audio_path"] = a.ref
+    if a.bpm:
+        payload["bpm"] = a.bpm
+    if a.key:
+        payload["key_scale"] = a.key
     (pdir / "logs" / f"{a.label}.json").write_text(json.dumps(payload, indent=2))
     knobs = f"strength={a.strength} noise={a.noise} " if a.task == "cover" else ""
     print(f"Submitting {a.label} ({a.task}, {dur}s): {knobs}ref={a.ref or '-'} batch={a.batch} "

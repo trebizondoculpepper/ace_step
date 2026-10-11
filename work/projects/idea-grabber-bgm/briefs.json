@@ -1,0 +1,402 @@
+[
+  {
+    "id": "bgm-01-neon-roadtrip",
+    "game": "OutRun",
+    "theme": "Magical Sound Shower",
+    "bpm": 128,
+    "key": "C major",
+    "caption": "sunny 1986 arcade driving music, Yamaha FM synth, Latin-tinged salsa groove, bright FM electric piano chords, bouncing slap-style FM bass, timbales and congas, breezy summer melody",
+    "notes": "Sun-soaked FM chords over a salsa-tinged arcade groove and a silly bouncing bass.",
+    "genre": "FM Latin fusion"
+  },
+  {
+    "id": "bgm-02-pocket-quest",
+    "game": "The Legend of Zelda",
+    "theme": "Overworld theme",
+    "bpm": 150,
+    "key": "B♭ major",
+    "caption": "NES 8-bit heroic adventure march, square-wave fanfare lead with dotted rhythms, triangle-wave bass, fast pulse arpeggios, noise snare rolls, brave and determined",
+    "notes": "A tiny heroic NES fanfare march with cheeky pulse arpeggios and snare rolls.",
+    "genre": "chiptune march"
+  },
+  {
+    "id": "bgm-03-frog-hop-jamboree",
+    "game": "Frogger",
+    "theme": "Main arcade theme",
+    "bpm": 140,
+    "key": "F major",
+    "caption": "early 1980s arcade sound chip, Japanese nursery-song style melody, hopping staccato square lead, stop-start rhythm, plinky bass, comic novelty tune",
+    "notes": "A hopping nursery-style arcade tune with stop-start percussion and springy bass.",
+    "genre": "novelty chiptune"
+  },
+  {
+    "id": "bgm-04-plumber-on-a-mission",
+    "game": "Super Mario Bros.",
+    "theme": "Overworld theme",
+    "bpm": 150,
+    "key": "C major",
+    "caption": "NES 8-bit calypso-swing platformer music, syncopated square-wave lead, bouncy triangle bass with octave jumps, noise percussion, cheerful and springy",
+    "notes": "A cheerful syncopated square-wave platformer tune with comically springy bass.",
+    "genre": "chiptune calypso"
+  },
+  {
+    "id": "bgm-05-blue-blur-boogie",
+    "game": "Sonic the Hedgehog",
+    "theme": "Green Hill Zone",
+    "bpm": 150,
+    "key": "C major",
+    "caption": "Sega Mega Drive YM2612 FM synth, fast bubbly pop-funk, elastic FM slap bass, bright FM marimba and synth brass, sampled drums, sunny and speedy",
+    "notes": "Fast, elastic Mega Drive FM funk with a sunny bubbly lead.",
+    "genre": "FM funk"
+  },
+  {
+    "id": "bgm-06-falling-block-party",
+    "game": "Tetris",
+    "theme": "Type A",
+    "bpm": 150,
+    "key": "A minor",
+    "caption": "Game Boy chiptune polka, Russian folk dance melody in a minor key, square-wave lead, oom-pah bass, accelerating dance feel, playful",
+    "notes": "A tiny Game Boy chip polka with a Russian folk lilt that keeps speeding up.",
+    "genre": "chiptune polka"
+  },
+  {
+    "id": "bgm-07-banana-brass-band",
+    "game": "Donkey Kong Country",
+    "theme": "Jungle Hijinxs",
+    "bpm": 110,
+    "key": "D major",
+    "caption": "SNES jungle groove, rubbery synth bass, tribal hand percussion, miniature synth brass stabs, laid-back funky platformer music",
+    "notes": "A laid-back SNES jungle groove with rubbery bass and miniature synth brass.",
+    "genre": "jungle groove"
+  },
+  {
+    "id": "bgm-08-pink-puff-parade",
+    "game": "Kirby's Dream Land",
+    "theme": "Green Greens",
+    "bpm": 135,
+    "key": "C major",
+    "caption": "Game Boy chiptune toy march, cute squeaky square-wave lead, bouncy bass, light noise drums, innocent and happy, music box sparkle",
+    "notes": "A toy-box Game Boy march with a squeaky, cute chip lead.",
+    "genre": "chiptune march"
+  },
+  {
+    "id": "bgm-09-robot-lunch-break",
+    "game": "Mega Man 2",
+    "theme": "Dr. Wily Stage 1",
+    "bpm": 160,
+    "key": "E minor",
+    "caption": "NES 8-bit hard rock action music, driving square-wave lead with fast arpeggios, pumping triangle bass in eighth notes, busy noise drum fills, heroic minor key",
+    "notes": "An enthusiastic robot band of driving NES rock with exaggerated drum fills.",
+    "genre": "chiptune rock"
+  },
+  {
+    "id": "bgm-10-tiny-castle-big-drama",
+    "game": "Castlevania",
+    "theme": "Vampire Killer",
+    "bpm": 150,
+    "key": "D minor",
+    "caption": "NES 8-bit gothic rock, dramatic minor-key square-wave lead, fast pulse arpeggios, galloping bass, harmonic minor melody, spooky but fun",
+    "notes": "Dramatic gothic NES arpeggios played with cartoon menace.",
+    "genre": "gothic chiptune rock"
+  },
+  {
+    "id": "bgm-11-bubble-pop-picnic",
+    "game": "Bubble Bobble",
+    "theme": "Main theme",
+    "bpm": 140,
+    "key": "G major",
+    "caption": "1986 arcade chip music, bubbly cheerful pulse lead, mini disco beat, walking bass, sing-along cute melody, sugary and repetitive",
+    "notes": "A bubbly arcade pulse lead over cheerful miniature disco.",
+    "genre": "chiptune disco"
+  },
+  {
+    "id": "bgm-12-space-snack-attack",
+    "game": "Metroid",
+    "theme": "Brinstar",
+    "bpm": 120,
+    "key": "E minor",
+    "caption": "NES 8-bit space exploration music, mysterious minor melody, bouncy syncopated triangle bass, echoing square arpeggios, alien atmosphere with a bouncy groove",
+    "notes": "A mysterious NES space tune played by a surprisingly bouncy band.",
+    "genre": "chiptune space groove"
+  },
+  {
+    "id": "bgm-13-turbo-kart-confetti",
+    "game": "Super Mario Kart",
+    "theme": "Mario Circuit",
+    "bpm": 150,
+    "key": "C major",
+    "caption": "SNES kart racing music, upbeat brass-like synth lead, fast shuffle drums, bouncy slap bass, carnival racing energy, playful horn flourishes",
+    "notes": "Upbeat SNES racing music with noisy drums and ridiculous horn flourishes.",
+    "genre": "chiptune racing"
+  },
+  {
+    "id": "bgm-14-eight-bit-knockout",
+    "game": "Street Fighter II",
+    "theme": "Guile's Theme",
+    "bpm": 130,
+    "key": "E minor",
+    "caption": "early 1990s arcade CPS1 FM synth, heroic military-rock groove, bright FM brass stabs, punchy synth bass, driving snare, soaring melody",
+    "notes": "Bright FM brass stabs over an overenthusiastic tiny arcade rhythm section.",
+    "genre": "FM action rock"
+  },
+  {
+    "id": "bgm-15-doctor-pixel-disco",
+    "game": "Dr. Mario",
+    "theme": "Fever",
+    "bpm": 140,
+    "key": "F major",
+    "caption": "NES 8-bit puzzle pop, catchy funky square-wave melody, cheeky syncopated triangle bass, disco hi-hat noise, bouncy breakdowns",
+    "notes": "A funky NES puzzle-pop melody with cheeky bass and compact disco breaks.",
+    "genre": "chiptune puzzle pop"
+  },
+  {
+    "id": "bgm-16-monster-pocket-money",
+    "game": "Pokémon Red/Blue",
+    "theme": "Opening theme",
+    "bpm": 140,
+    "key": "G major",
+    "caption": "Game Boy chiptune adventure opening, eager heroic square-wave melody, marching snare noise, bright arpeggios, curious and triumphant",
+    "notes": "An eager, curious and heroic Game Boy opening on a tiny budget.",
+    "genre": "chiptune adventure"
+  },
+  {
+    "id": "bgm-17-fantasy-fanfare-fumble",
+    "game": "Final Fantasy",
+    "theme": "Victory Fanfare",
+    "bpm": 125,
+    "key": "C major",
+    "caption": "NES 8-bit RPG victory fanfare, triumphant triplet brass-like square lead, celebratory arpeggio runs, cheerful march bass, comedic stumbling rhythm",
+    "notes": "A triumphant RPG fanfare that keeps tripping over itself.",
+    "genre": "chiptune fanfare"
+  },
+  {
+    "id": "bgm-18-yoshi-toybox",
+    "game": "Yoshi's Island",
+    "theme": "Athletic theme",
+    "bpm": 140,
+    "key": "C major",
+    "caption": "SNES toy instrument parade, jaunty xylophone and toy piano, bright chip percussion, whistles, swinging bouncy bass, childlike and joyful",
+    "notes": "A jaunty SNES toy-instrument parade with bright chip percussion.",
+    "genre": "toy-box parade"
+  },
+  {
+    "id": "bgm-19-pirate-pixel-shuffle",
+    "game": "The Secret of Monkey Island",
+    "theme": "Main theme",
+    "bpm": 100,
+    "key": "D major",
+    "caption": "1990 Amiga and AdLib adventure game music, Caribbean reggae groove, swashbuckling pirate melody, steel drum synth, offbeat organ skank, sunny beach party",
+    "notes": "Swashbuckling reggae-tinged pirate beach-party nonsense.",
+    "genre": "chiptune reggae"
+  },
+  {
+    "id": "bgm-20-duck-disco-finale",
+    "game": "DuckTales",
+    "theme": "The Moon",
+    "bpm": 150,
+    "key": "C major",
+    "caption": "NES 8-bit space disco, joyful soaring square-wave melody, sparkling fast pulse arpeggios, disco octave bass, bright noise hi-hats, uplifting",
+    "notes": "A joyful miniature NES space disco with sparkling arpeggios.",
+    "genre": "chiptune space disco"
+  },
+  {
+    "id": "bgm-21-maze-muncher-mambo",
+    "game": "Pac-Man",
+    "theme": "Intro tune",
+    "bpm": 120,
+    "key": "B major",
+    "caption": "1980 arcade sound chip mambo, greedy little Latin melody, wakka-wakka blip percussion, plinky bass, chromatic run-ups, comic",
+    "notes": "A greedy little arcade mambo with wakka-wakka blip percussion.",
+    "genre": "chiptune mambo"
+  },
+  {
+    "id": "bgm-22-bug-swarm-salute",
+    "game": "Galaga",
+    "theme": "Stage start theme",
+    "bpm": 120,
+    "key": "C major",
+    "caption": "early 1980s arcade space fanfare, pompous square-wave march, rising call-and-response phrases, snare rolls, space cadet salute, restarting comic stops",
+    "notes": "A pompous arcade space-cadet march that keeps restarting.",
+    "genre": "chiptune march"
+  },
+  {
+    "id": "bgm-23-boxer-shorts-graveyard",
+    "game": "Ghosts 'n Goblins",
+    "theme": "Stage 1",
+    "bpm": 150,
+    "key": "C minor",
+    "caption": "1985 arcade spooky-comic gallop, wobbly organ lead, galloping minor-key bass, haunted graveyard march, cartoon horror fun",
+    "notes": "A spooky-comic arcade graveyard gallop with wobbly organ.",
+    "genre": "spooky chiptune gallop"
+  },
+  {
+    "id": "bgm-24-alley-cat-brawl",
+    "game": "Double Dragon",
+    "theme": "Mission 1",
+    "bpm": 130,
+    "key": "E minor",
+    "caption": "late 1980s arcade beat-em-up, swaggering street-tough synth bass riff, minor-key FM lead, gated snare, cool urban groove that is secretly polite",
+    "notes": "Swaggering street-tough FM bass that is secretly very polite.",
+    "genre": "FM beat-em-up groove"
+  },
+  {
+    "id": "bgm-25-jungle-run-and-gun",
+    "game": "Contra",
+    "theme": "Jungle stage",
+    "bpm": 155,
+    "key": "D minor",
+    "caption": "NES 8-bit action rock, breathless heroic square-wave riffs, fast galloping triangle bass, toy drum kit noise fills, adrenaline jungle run",
+    "notes": "Breathless heroic NES rock riffs on a toy drum kit.",
+    "genre": "chiptune action rock"
+  },
+  {
+    "id": "bgm-26-street-sweeper-groove",
+    "game": "Streets of Rage 2",
+    "theme": "Go Straight",
+    "bpm": 130,
+    "key": "C minor",
+    "caption": "Sega Mega Drive FM club house music, four-on-the-floor kick, FM piano house chords, big goofy synth hook, deep FM bass, early 1990s rave",
+    "notes": "Clubby Mega Drive FM house with a big goofy synth hook.",
+    "genre": "FM house"
+  },
+  {
+    "id": "bgm-27-chemical-bubble-bounce",
+    "game": "Sonic the Hedgehog 2",
+    "theme": "Chemical Plant Zone",
+    "bpm": 145,
+    "key": "C minor",
+    "caption": "Sega Mega Drive FM techno, pumping sequenced FM bass, energetic minor-key synth melody, sampled breakbeat drums, rubbery fills, fast and bubbly",
+    "notes": "Pumping Mega Drive FM techno with rubbery fills.",
+    "genre": "FM techno"
+  },
+  {
+    "id": "bgm-28-raccoon-tail-romp",
+    "game": "Super Mario Bros. 3",
+    "theme": "Grass Land overworld",
+    "bpm": 120,
+    "key": "C major",
+    "caption": "NES 8-bit calypso shuffle, steel drum chip lead, strutting syncopated bass, light shaker noise percussion, sunny island stroll",
+    "notes": "A strutting NES calypso shuffle with steel-drum chips.",
+    "genre": "chiptune calypso"
+  },
+  {
+    "id": "bgm-29-time-travel-teatime",
+    "game": "Chrono Trigger",
+    "theme": "Main theme",
+    "bpm": 140,
+    "key": "D major",
+    "caption": "SNES orchestral adventure theme, sweeping strings and synth brass, heroic soaring melody, driving snare, tiny orchestra, epic but playful",
+    "notes": "A sweeping SNES adventure theme on a very small orchestra.",
+    "genre": "chiptune orchestral adventure"
+  },
+  {
+    "id": "bgm-30-mana-tree-hoedown",
+    "game": "Secret of Mana",
+    "theme": "Into the Thick of It",
+    "bpm": 120,
+    "key": "F major",
+    "caption": "SNES woodland adventure, playful flute and pan pipe lead, skipping folk rhythm, pizzicato strings, hand drums, forest dance",
+    "notes": "Woodland SNES flutes over a skipping folk rhythm.",
+    "genre": "chiptune folk dance"
+  },
+  {
+    "id": "bgm-31-hover-car-hurricane",
+    "game": "F-Zero",
+    "theme": "Mute City",
+    "bpm": 155,
+    "key": "D minor",
+    "caption": "SNES futuristic racing synth rock, slap bass, furious driving drums, bright synth lead, power chord stabs, high speed",
+    "notes": "Slap bass and furious SNES racing synth-rock.",
+    "genre": "synth racing rock"
+  },
+  {
+    "id": "bgm-32-boom-box-maze",
+    "game": "Super Bomberman",
+    "theme": "Stage theme",
+    "bpm": 140,
+    "key": "G major",
+    "caption": "SNES chip pop, bouncy fuse-sparking melody, comic cymbal crashes, cheerful bass, cartoon bomb fun, upbeat party",
+    "notes": "Fuse-sparking SNES chip pop with comic cymbal crashes.",
+    "genre": "chiptune pop"
+  },
+  {
+    "id": "bgm-33-dino-bubble-shooter",
+    "game": "Puzzle Bobble",
+    "theme": "Main theme",
+    "bpm": 150,
+    "key": "C major",
+    "caption": "1994 arcade sugary J-pop chiptune, cute bouncy synth melody, hand-clap noise drums, bright happy chords, cheerful bass",
+    "notes": "Sugary J-pop chip bounce with hand-clap noise drums.",
+    "genre": "chiptune J-pop"
+  },
+  {
+    "id": "bgm-34-lemming-line-dance",
+    "game": "Lemmings",
+    "theme": "Level music",
+    "bpm": 130,
+    "key": "C major",
+    "caption": "1991 Amiga tracker music, cheery music-hall novelty tune, oompah bass, jolly sampled strings and flutes, marching snare, silly",
+    "notes": "A cheery Amiga music-hall tune that marches off a cliff.",
+    "genre": "Amiga music hall"
+  },
+  {
+    "id": "bgm-35-mansion-of-mischief",
+    "game": "Maniac Mansion",
+    "theme": "Main theme",
+    "bpm": 120,
+    "key": "A minor",
+    "caption": "1987 home computer chiptune, creepy-cute B-movie organ, bouncy walking bass, minor-key spooky melody, comedic horror",
+    "notes": "Creepy-cute B-movie organ with a bouncy bass.",
+    "genre": "spooky chiptune organ"
+  },
+  {
+    "id": "bgm-36-funky-alien-elevator",
+    "game": "ToeJam & Earl",
+    "theme": "Main theme",
+    "bpm": 100,
+    "key": "E minor",
+    "caption": "Sega Mega Drive FM funk, laid-back alien groove, wah-wah synth bass, funky FM clavinet, relaxed hip-hop drums, cool and goofy",
+    "notes": "Laid-back Mega Drive alien funk with wah-wah synth bass.",
+    "genre": "FM alien funk"
+  },
+  {
+    "id": "bgm-37-bear-and-bird-ramble",
+    "game": "Banjo-Kazooie",
+    "theme": "Spiral Mountain",
+    "bpm": 110,
+    "key": "G major",
+    "caption": "N64 bumbling countryside music, banjo and tuba, plucky xylophone, bouncy oom-pah bass, cheerful rural stroll",
+    "notes": "Bumbling banjo-and-tuba-flavoured N64 countryside.",
+    "genre": "chiptune country"
+  },
+  {
+    "id": "bgm-38-bobomb-backyard-battle",
+    "game": "Super Mario 64",
+    "theme": "Bob-omb Battlefield",
+    "bpm": 130,
+    "key": "C major",
+    "caption": "N64 sunny brassy platformer music, bombastic synth brass, toy instruments, bouncy bass, marching snare, bright and adventurous",
+    "notes": "Brassy, sunny and bombastic N64 music on toy instruments.",
+    "genre": "chiptune brass march"
+  },
+  {
+    "id": "bgm-39-forest-ocarina-picnic",
+    "game": "The Legend of Zelda: Ocarina of Time",
+    "theme": "Saria's Song",
+    "bpm": 120,
+    "key": "F major",
+    "caption": "N64 relaxed sprightly forest dance, ocarina-like square-wave lead, skipping bass, light hand percussion, carefree and friendly",
+    "notes": "A relaxed, sprightly forest dance on ocarina-like square waves.",
+    "genre": "chiptune forest dance"
+  },
+  {
+    "id": "bgm-40-dog-laughs-last",
+    "game": "Duck Hunt",
+    "theme": "Title theme",
+    "bpm": 135,
+    "key": "C major",
+    "caption": "NES 8-bit sports broadcast jingle, smug cheerful square-wave melody, brisk march bass, noise snare, cheeky ending",
+    "notes": "A smug little NES sports-broadcast jingle with a cheeky ending.",
+    "genre": "chiptune jingle"
+  }
+]

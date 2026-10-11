@@ -69,7 +69,8 @@ Learned on bbc-news-24-remix: strength 0.45 / noise 0 / thinking on lost the tun
 6. **Score** each render: `.venv/bin/python work/bin/melody_check.py <source> <renders...>`
    (1.0 = identical tune, ~0.43 = tune lost). Report scores with the listening request.
 7. **Record** what was tried and the verdict in the project's `NOTES.md`.
-8. **Stop** the server when done (`work/bin/server.sh stop`) — it holds a lot of memory.
+8. **Stop the server at the end of every batch** (`work/bin/server.sh stop`), unprompted —
+   user preference (2026-10-10). It holds a lot of memory and restarts in ~25 s.
 
 ## Time feedback (required)
 

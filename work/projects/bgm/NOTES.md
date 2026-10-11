@@ -44,3 +44,15 @@ to the original balance. Outputs `*_fx-medium.wav`, `*_fx-heavy.wav`. **User: "g
 
 Considered/not pursued: original as reference_audio; per-stem model re-render (started, cancelled);
 base-model lego (download cancelled); 1960s LoKr training.
+
+## Journey to the Centre of the Mind — same pipeline (2026-10-10)
+
+Original stems (htdemucs_6s, 16 s): guitar −22.7, vocals −23.8, bass −26.0, drums −27.7,
+other/piano ≈ −50 dB → guitar-led mix. `source/journey-centre-mind_gbd.wav` = g+b+d −3 dB
+(peak −3.9). Re-render s1.0 at noise 0.5 and 0.7 (seed 7), then Demucs + `stem_fx.py
+--balance <original stems>` so the fx mix keeps Journey's own guitar-forward balance.
+
+| label | noise | time | melody vs gbd | outputs |
+|---|---|---|---|---|
+| journey-gbd-s100-n050 | 0.5 (2 steps) | 1m30s | 0.806 | clean, _fx-medium, _fx-heavy (listen) |
+| journey-gbd-s100-n070 | 0.7 (1 step) | 1m18s | 0.879 | clean, _fx-medium, _fx-heavy — **user: "Journey is great"** |

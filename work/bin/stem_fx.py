@@ -8,7 +8,8 @@ Run Demucs first: demucs -n htdemucs_6s -d mps -o <project>/logs/demucs <render.
 Stems used: guitar (fuzz + tape slapback), bass (valve grit), drums (saturation + room
 echo in medium, 1.2 s convolution room reverb in heavy).
 vocals/other/piano are dropped. Each processed stem is set to a target mean level taken from
-the original's balance (bass -19.5, drums -17.7, guitar -21.8 dB), then the mix is
+the original's balance (--balance <original stems dir>; default Velvet Opera Intro:
+bass -19.5, drums -17.7, guitar -21.8 dB), then the mix is
 loudness-normalised. Writes <render stem>_fx-<preset>.wav next to the render.
 """
 
@@ -79,12 +80,12 @@ def process_stem(src: Path, spec: str | tuple, target_db: float, out: Path) -> N
     Path(str(out) + ".tmp.wav").replace(out)
 
 
-def render(render_path: Path, stems: Path, preset: str, lufs: float) -> Path:
+def render(render_path: Path, stems: Path, preset: str, lufs: float, targets: dict) -> Path:
     """Process the three stems for a preset and mix them to one file."""
     tmp = []
     for name, chain in PRESETS[preset].items():
         out = stems / f"{name}_fx-{preset}.wav"
-        process_stem(stems / f"{name}.wav", chain, TARGET_DB[name], out)
+        process_stem(stems / f"{name}.wav", chain, targets[name], out)
         tmp.append(out)
     final = render_path.with_name(f"{render_path.stem}_fx-{preset}.wav")
     inputs = [arg for p in tmp for arg in ("-i", str(p))]
@@ -101,11 +102,16 @@ def main() -> int:
     ap.add_argument("--preset", default="all", choices=[*PRESETS, "all"])
     ap.add_argument("--lufs", type=float, default=-14.0)
     ap.add_argument("--stems")
+    ap.add_argument("--balance", help="dir of the ORIGINAL song's stems; match their levels "
+                    "(default: Velvet Opera Intro balance)")
     a = ap.parse_args()
+    targets = ({n: mean_db(Path(a.balance) / f"{n}.wav") for n in TARGET_DB}
+               if a.balance else TARGET_DB)
+    print("stem targets (dB):", {n: round(v, 1) for n, v in targets.items()})
     src = Path(a.render)
     stems = Path(a.stems) if a.stems else src.parents[1] / "logs" / "demucs" / "htdemucs_6s" / src.stem
     for preset in PRESETS if a.preset == "all" else [a.preset]:
-        print(render(src, stems, preset, a.lufs).name)
+        print(render(src, stems, preset, a.lufs, targets).name)
     return 0
 
 
